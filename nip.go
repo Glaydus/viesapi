@@ -33,10 +33,10 @@ func (n *NIP) IsValid(nip string) bool {
 	res := 0
 
 	for i := range w {
-		res += int(nip[i]) * w[i]
+		res += int(nip[i]-'0') * w[i]
 	}
 	res %= 11
-	if res != int(nip[9]) {
+	if res != int(nip[9]-'0') {
 		return false
 	}
 	return true
