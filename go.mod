@@ -1,3 +1,3 @@
 module github.com/glaydus/viesapi
 
-go 1.19
+go 1.18

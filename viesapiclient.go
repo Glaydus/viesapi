@@ -16,17 +16,47 @@ import (
 	"time"
 )
 
-type VIESData struct {
-	UID               string `json:"uid"`
-	CountryCode       string `json:"country_code"`
-	VATNumber         string `json:"vat_number"`
-	Valid             bool   `json:"valid"`
-	TraderName        string `json:"trader_name"`
-	TraderCompanyType string `json:"trader_company_type"`
-	TraderAddress     string `json:"trader_address"`
-	ID                string `json:"id"`
-	Date              string `json:"date"`
-	Source            string `json:"source"`
+type viesData struct {
+	XMLName xml.Name  `xml:"result"`
+	VIES    VIESData  `xml:"vies"`
+	Error   viesError `xml:"error"`
+}
+
+type viesAccountStatus struct {
+	XMLName xml.Name    `xml:"result"`
+	Account viesAccount `xml:"account"`
+	Error   viesError   `xml:"error"`
+}
+
+type viesAccount struct {
+	UID         string          `xml:"uid"`
+	Type        string          `xml:"type"`
+	ValidTo     time.Time       `xml:"validTo"`
+	BillingPlan viesBillingPlan `xml:"billingPlan"`
+}
+
+type viesBillingPlan struct {
+	Name              string  `xml:"name"`
+	SubscriptionPrice float64 `xml:"subscriptionPrice"`
+	ItemPrice         float64 `xml:"itemPrice"`
+	ItemPriceStatus   float64 `xml:"itemPriceCheckStatus"`
+	Limit             int     `xml:"limit"`
+	RequestDelay      int     `xml:"requestDelay"`
+	DomainLimit       int     `xml:"domainLimit"`
+	OverPlanAllowed   bool    `xml:"overplanAllowed"`
+	ExcelAddIn        bool    `xml:"excelAddin"`
+	App               bool    `xml:"app"`
+	CLI               bool    `xml:"cli"`
+	Stats             bool    `xml:"stats"`
+	Monitor           bool    `xml:"monitor"`
+	FuncGetVIESData   bool    `xml:"funcGetVIESData"`
+	VIESDataCount     int     `xml:"viesData"`
+	TotalCount        int     `xml:"total"`
+}
+
+type viesError struct {
+	Code        int    `xml:"code"`
+	Description string `xml:"description"`
 }
 
 type VIESClient struct {
@@ -41,41 +71,20 @@ type VIESClient struct {
 }
 
 const (
-	vies_version = "1.2.5"
-
 	numberEUVAT = iota
 	numberNIP
 )
 
-func NewVIESClient(id, key string) *VIESClient {
+const (
+	production_url = "https://viesapi.eu/api"
+	test_url       = "https://viesapi.eu/api-test"
 
-	const (
-		production_url = "https://viesapi.eu/api"
-		test_url       = "https://viesapi.eu/api-test"
-
-		test_id  = "test_id"
-		test_key = "test_key"
-	)
-
-	Client := &VIESClient{}
-	if id == "" || key == "" {
-		Client.id = test_id
-		Client.key = test_key
-		Client.url = test_url
-	} else {
-		Client.id = id
-		Client.key = key
-		Client.url = production_url
-	}
-	Client.err = Error{}
-	Client.uevat = EUVAT{}
-	Client.nip = NIP{}
-
-	return Client
-}
+	test_id  = "test_id"
+	test_key = "test_key"
+)
 
 // Get VIES data for specified number
-func (c *VIESClient) GetVIESData(euvat string) (*VIESData, bool) {
+func (c *VIESClient) getData(euvat string) *VIESData {
 
 	// clear error
 	c.clear()
@@ -83,7 +92,7 @@ func (c *VIESClient) GetVIESData(euvat string) (*VIESData, bool) {
 	// validate number and construct path
 	suffix, ok := c.getPathSuffix(numberEUVAT, euvat)
 	if !ok {
-		return nil, false
+		return nil
 	}
 
 	//prepare url
@@ -93,29 +102,75 @@ func (c *VIESClient) GetVIESData(euvat string) (*VIESData, bool) {
 	res := c.get(url)
 	if res == nil {
 		c.set(CLI_CONNECT, "")
-		return nil, false
+		return nil
 	}
 
-	var out any
-	err := xml.Unmarshal(res, &out)
+	// parse response
+	var data viesData
+	err := xml.Unmarshal(res, &data)
 	if err != nil {
 		c.set(CLI_RESPONSE, "")
-		return nil, false
+		return nil
 	}
 
-	data := &VIESData{}
+	if data.Error.Code != 0 {
+		c.set(data.Error.Code, data.Error.Description)
+		return nil
+	}
 
-	return data, true
+	return &data.VIES
 }
 
-// Set non default service URL
-func (c *VIESClient) SetUrl(url string) {
-	c.url = url
-}
+// Get user account's status
+func (c *VIESClient) getAccountStatus() *AccountStatus {
 
-// Get last error message
-func (c *VIESClient) GetLastError() (int, string) {
-	return c.errcode, c.errmsg
+	// clear error
+	c.clear()
+
+	//prepare url
+	url := c.url + "/check/account/status"
+
+	// send request
+	res := c.get(url)
+	if res == nil {
+		c.set(CLI_CONNECT, "")
+		return nil
+	}
+
+	// parse response
+	var data viesAccountStatus
+	err := xml.Unmarshal(res, &data)
+	if err != nil {
+		c.set(CLI_RESPONSE, "")
+		return nil
+	}
+
+	if data.Error.Code != 0 {
+		c.set(data.Error.Code, data.Error.Description)
+		return nil
+	}
+
+	return &AccountStatus{
+		UID:               data.Account.UID,
+		Type:              data.Account.Type,
+		ValidTo:           data.Account.ValidTo,
+		BillingPlanName:   data.Account.BillingPlan.Name,
+		SubscriptionPrice: data.Account.BillingPlan.SubscriptionPrice,
+		ItemPrice:         data.Account.BillingPlan.ItemPrice,
+		ItemPriceStatus:   data.Account.BillingPlan.ItemPriceStatus,
+		Limit:             data.Account.BillingPlan.Limit,
+		RequestDelay:      data.Account.BillingPlan.RequestDelay,
+		DomainLimit:       data.Account.BillingPlan.DomainLimit,
+		OverPlanAllowed:   data.Account.BillingPlan.OverPlanAllowed,
+		ExcelAddIn:        data.Account.BillingPlan.ExcelAddIn,
+		App:               data.Account.BillingPlan.App,
+		CLI:               data.Account.BillingPlan.CLI,
+		Stats:             data.Account.BillingPlan.Stats,
+		Monitor:           data.Account.BillingPlan.Monitor,
+		FuncGetVIESData:   data.Account.BillingPlan.FuncGetVIESData,
+		VIESDataCount:     data.Account.BillingPlan.VIESDataCount,
+		TotalCount:        data.Account.BillingPlan.TotalCount,
+	}
 }
 
 // Prepare authorization header content
