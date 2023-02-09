@@ -1,8 +1,7 @@
 package viesapi
 
 // VIES API error codes
-type Error struct {
-}
+type Error struct{}
 
 // Get error message
 func (e *Error) message(code int) string {

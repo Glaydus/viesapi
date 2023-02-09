@@ -1,6 +1,9 @@
 package viesapi
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 const vies_version = "1.2.5"
 
@@ -60,14 +63,22 @@ func NewVIESClient(id, key string) *VIESClient {
 
 // Get current account status
 // GetAccountStatus returns account status or nil in case of error
-func (c *VIESClient) GetAccountStatus() *AccountStatus {
-	return c.getAccountStatus()
+func (c *VIESClient) GetAccountStatus() (*AccountStatus, *ViesError) {
+	status := c.getAccountStatus()
+	if status != nil {
+		return status, nil
+	}
+	return nil, &ViesError{c.errcode, c.errmsg}
 }
 
 // Get VIES data for specified number from EU VIES system
 // GetVIESData returns VIES data or nil in case of error
-func (c *VIESClient) GetVIESData(euvat string) *VIESData {
-	return c.getData(euvat)
+func (c *VIESClient) GetVIESData(euvat string) (*VIESData, *ViesError) {
+	data := c.getData(euvat)
+	if data != nil {
+		return data, nil
+	}
+	return nil, &ViesError{c.errcode, c.errmsg}
 }
 
 // Get last error message
@@ -79,4 +90,22 @@ func (c *VIESClient) GetLastError() (int, string) {
 // Set non default service URL
 func (c *VIESClient) SetUrl(url string) {
 	c.url = url
+}
+
+// Return last code and description of error
+func (e *ViesError) Error() string {
+	b, _ := json.Marshal(e)
+	return string(b)
+}
+
+// Return account status as string
+func (a *AccountStatus) String() string {
+	b, _ := json.Marshal(a)
+	return string(b)
+}
+
+// Return VIES data as string
+func (v *VIESData) String() string {
+	b, _ := json.Marshal(v)
+	return string(b)
 }

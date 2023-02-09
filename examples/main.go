@@ -1,30 +1,24 @@
 package main
 
 import (
-	"encoding/json"
-
 	"github.com/glaydus/viesapi"
 )
 
 func main() {
 	client := viesapi.NewVIESClient("", "")
-	nip := "PL7171642051"
+	nip := "PL7272445205"
 
-	status := client.GetAccountStatus()
+	status, err := client.GetAccountStatus()
 	if status != nil {
-
-		b, _ := json.MarshalIndent(status, "", "    ")
-		if b != nil {
-			println(string(b))
-		}
+		println(status.String())
+	} else {
+		println(err.Error())
 	}
 
-	data := client.GetVIESData(nip)
+	data, err := client.GetVIESData(nip)
 	if data != nil {
-		b, _ := json.MarshalIndent(data, "", "    ")
-		if b != nil {
-			println(string(b))
-		}
+		println(data.String())
+	} else {
+		println(err.Error())
 	}
-
 }

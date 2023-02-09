@@ -19,20 +19,24 @@ import (
 type viesData struct {
 	XMLName xml.Name  `xml:"result"`
 	VIES    VIESData  `xml:"vies"`
-	Error   viesError `xml:"error"`
+	Error   ViesError `xml:"error"`
 }
 
 type viesAccountStatus struct {
 	XMLName xml.Name    `xml:"result"`
 	Account viesAccount `xml:"account"`
-	Error   viesError   `xml:"error"`
+	Error   ViesError   `xml:"error"`
 }
 
 type viesAccount struct {
 	UID         string          `xml:"uid"`
 	Type        string          `xml:"type"`
-	ValidTo     *time.Time      `xml:"validTo"`
+	ValidTo     string          `xml:"validTo"`
 	BillingPlan viesBillingPlan `xml:"billingPlan"`
+	Requests    struct {
+		VIESDataCount int `xml:"viesData"`
+		TotalCount    int `xml:"total"`
+	} `xml:"requests"`
 }
 
 type viesBillingPlan struct {
@@ -50,13 +54,11 @@ type viesBillingPlan struct {
 	Stats             bool    `xml:"stats"`
 	Monitor           bool    `xml:"monitor"`
 	FuncGetVIESData   bool    `xml:"funcGetVIESData"`
-	VIESDataCount     int     `xml:"viesData"`
-	TotalCount        int     `xml:"total"`
 }
 
-type viesError struct {
-	Code        int    `xml:"code"`
-	Description string `xml:"description"`
+type ViesError struct {
+	Code        int    `json:"code" xml:"code"`
+	Description string `json:"description" xml:"description"`
 }
 
 type VIESClient struct {
@@ -153,7 +155,7 @@ func (c *VIESClient) getAccountStatus() *AccountStatus {
 	return &AccountStatus{
 		UID:               data.Account.UID,
 		Type:              data.Account.Type,
-		ValidTo:           data.Account.ValidTo,
+		ValidTo:           c.getDateTime(data.Account.ValidTo),
 		BillingPlanName:   data.Account.BillingPlan.Name,
 		SubscriptionPrice: data.Account.BillingPlan.SubscriptionPrice,
 		ItemPrice:         data.Account.BillingPlan.ItemPrice,
@@ -168,8 +170,8 @@ func (c *VIESClient) getAccountStatus() *AccountStatus {
 		Stats:             data.Account.BillingPlan.Stats,
 		Monitor:           data.Account.BillingPlan.Monitor,
 		FuncGetVIESData:   data.Account.BillingPlan.FuncGetVIESData,
-		VIESDataCount:     data.Account.BillingPlan.VIESDataCount,
-		TotalCount:        data.Account.BillingPlan.TotalCount,
+		VIESDataCount:     data.Account.Requests.VIESDataCount,
+		TotalCount:        data.Account.Requests.TotalCount,
 	}
 }
 
@@ -285,6 +287,33 @@ func (c *VIESClient) getPathSuffix(typ int, number string) (string, bool) {
 		return "", false
 	}
 	return path, b
+}
+
+func (c *VIESClient) getDateTime(str string) *time.Time {
+	var zone string
+
+	if str == "" {
+		return nil
+	}
+
+	layout := "2006-01-02T15:04:05"
+	i := strings.IndexByte(str, '+')
+	if i > 0 {
+		str = str[:i]
+		zone = str[i:]
+		layout += "-07:00"
+	}
+	if len(str) >= 19 {
+		str = str[:19]
+	}
+	if zone != "" {
+		str += zone
+	}
+	t, err := time.Parse(layout, str)
+	if err != nil {
+		return nil
+	}
+	return &t
 }
 
 func (c *VIESClient) randomHex(n int) string {
