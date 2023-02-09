@@ -2,7 +2,7 @@ package viesapi
 
 import "time"
 
-const vies_version = "1.2.4"
+const vies_version = "1.2.5"
 
 type VIESData struct {
 	UID               string `json:"uid" xml:"uid"`
@@ -18,25 +18,25 @@ type VIESData struct {
 }
 
 type AccountStatus struct {
-	UID               string    `json:"uid"`
-	Type              string    `json:"type"`
-	ValidTo           time.Time `json:"valid_to"`
-	BillingPlanName   string    `json:"billing_plan_name"`
-	SubscriptionPrice float64   `json:"subscription_price"`
-	ItemPrice         float64   `json:"item_price"`
-	ItemPriceStatus   float64   `json:"item_price_status"`
-	Limit             int       `json:"limit"`
-	RequestDelay      int       `json:"request_delay"`
-	DomainLimit       int       `json:"domain_limit"`
-	OverPlanAllowed   bool      `json:"over_plan_allowed"`
-	ExcelAddIn        bool      `json:"excel_add_in"`
-	App               bool      `json:"app"`
-	CLI               bool      `json:"cli"`
-	Stats             bool      `json:"stats"`
-	Monitor           bool      `json:"monitor"`
-	FuncGetVIESData   bool      `json:"func_get_vies_data"`
-	VIESDataCount     int       `json:"vies_data_count"`
-	TotalCount        int       `json:"total_count"`
+	UID               string     `json:"uid" xml:"uid"`
+	Type              string     `json:"type" xml:"type"`
+	ValidTo           *time.Time `json:"valid_to" xml:"validTo"` // nil if not set
+	BillingPlanName   string     `json:"billing_plan_name" xml:"billingPlanName"`
+	SubscriptionPrice float64    `json:"subscription_price" xml:"subscriptionPrice"`
+	ItemPrice         float64    `json:"item_price" xml:"itemPrice"`
+	ItemPriceStatus   float64    `json:"item_price_status" xml:"itemPriceCheckStatus"`
+	Limit             int        `json:"limit" xml:"limit"`
+	RequestDelay      int        `json:"request_delay" xml:"requestDelay"`
+	DomainLimit       int        `json:"domain_limit" xml:"domainLimit"`
+	OverPlanAllowed   bool       `json:"over_plan_allowed" xml:"overplanAllowed"`
+	ExcelAddIn        bool       `json:"excel_add_in" xml:"excelAddin"`
+	App               bool       `json:"app" xml:"app"`
+	CLI               bool       `json:"cli" xml:"cli"`
+	Stats             bool       `json:"stats" xml:"stats"`
+	Monitor           bool       `json:"monitor" xml:"monitor"`
+	FuncGetVIESData   bool       `json:"func_get_vies_data" xml:"funcGetVIESData"`
+	VIESDataCount     int        `json:"vies_data_count" xml:"viesDataCount"`
+	TotalCount        int        `json:"total_count" xml:"totalCount"`
 }
 
 // Create new VIESClient instance with specified id and key or use test credentials

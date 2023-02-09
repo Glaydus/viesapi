@@ -31,7 +31,7 @@ type viesAccountStatus struct {
 type viesAccount struct {
 	UID         string          `xml:"uid"`
 	Type        string          `xml:"type"`
-	ValidTo     time.Time       `xml:"validTo"`
+	ValidTo     *time.Time      `xml:"validTo"`
 	BillingPlan viesBillingPlan `xml:"billingPlan"`
 }
 
@@ -215,6 +215,7 @@ func (c *VIESClient) clear() {
 	c.errmsg = ""
 }
 
+// Set error info
 func (c *VIESClient) set(code int, msg string) {
 	c.errcode = code
 	if msg != "" {
@@ -264,7 +265,7 @@ func (c *VIESClient) getPathSuffix(typ int, number string) (string, bool) {
 	var path string
 
 	if typ == numberNIP {
-		if !c.nip.IsValid(number) {
+		if !c.nip.isValid(number) {
 			c.set(CLI_NIP, "")
 			return "", false
 		}
@@ -272,7 +273,7 @@ func (c *VIESClient) getPathSuffix(typ int, number string) (string, bool) {
 		path = "nip/" + path
 
 	} else if typ == numberEUVAT {
-		if !c.uevat.IsValid(number) {
+		if !c.uevat.isValid(number) {
 			c.set(CLI_EUVAT, "")
 			return "", false
 		}

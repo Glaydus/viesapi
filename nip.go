@@ -6,8 +6,7 @@ import (
 )
 
 // NIP number validator
-type NIP struct {
-}
+type NIP struct{}
 
 // Normalizes form of the NIP number
 func (n *NIP) normalize(nip string) (string, bool) {
@@ -23,7 +22,7 @@ func (n *NIP) normalize(nip string) (string, bool) {
 }
 
 // Checks if specified NIP is valid
-func (n *NIP) IsValid(nip string) bool {
+func (n *NIP) isValid(nip string) bool {
 	nip, ok := n.normalize(nip)
 	if !ok {
 		return false

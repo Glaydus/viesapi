@@ -6,8 +6,7 @@ import (
 )
 
 // EU VAT number verificator
-type EUVAT struct {
-}
+type EUVAT struct{}
 
 // Normalizes form of the VAT number
 func (e *EUVAT) normalize(number string) (string, bool) {
@@ -23,7 +22,7 @@ func (e *EUVAT) normalize(number string) (string, bool) {
 }
 
 // Checks if specified VAT number is valid
-func (e *EUVAT) IsValid(number string) bool {
+func (e *EUVAT) isValid(number string) bool {
 	number, ok := e.normalize(number)
 	if !ok {
 		return false
@@ -40,7 +39,7 @@ func (e *EUVAT) IsValid(number string) bool {
 
 	if cc == "PL" {
 		nip := NIP{}
-		return nip.IsValid(num)
+		return nip.isValid(num)
 	}
 	return true
 }
