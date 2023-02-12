@@ -1,5 +1,6 @@
 # VIES API Client for Go
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/glaydus/viesapi)](https://goreportcard.com/report/github.com/glaydus/viesapi)
 [![Release](https://img.shields.io/github/v/release/glaydus/viesapi)](https://github.com/glaydus/viesapi/releases/latest)
 [![Go Reference](https://pkg.go.dev/badge/github.com/glaydus/viesapi.svg)](https://pkg.go.dev/github.com/glaydus/viesapi)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/glaydus/viesapi)
