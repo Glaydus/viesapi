@@ -193,7 +193,7 @@ func (c *VIESClient) auth(method, urlstr string) (string, bool) {
 	i := strings.LastIndexByte(host, ':')
 	if i > 0 {
 		host = host[:i]
-		port = host[i+1:]
+		port = url.Host[i+1:]
 	}
 
 	// prepare auth header value
@@ -290,25 +290,25 @@ func (c *VIESClient) getPathSuffix(typ int, number string) (string, bool) {
 }
 
 func (c *VIESClient) getDateTime(str string) *time.Time {
-	var zone string
 
 	if str == "" {
 		return nil
 	}
 
-	layout := "2006-01-02T15:04:05"
-	i := strings.IndexByte(str, '+')
-	if i > 0 {
-		str = str[:i]
-		zone = str[i:]
-		layout += "-07:00"
+	layout := "2006-01-02"
+
+	if len(str) > 10 {
+		layout += "T15:04:05"
 	}
-	if len(str) >= 19 {
-		str = str[:19]
+	if len(str) > 19 {
+		switch c := str[19]; c {
+		case '+', '-':
+			layout += "-07:00"
+		default:
+			str = str[:19]
+		}
 	}
-	if zone != "" {
-		str += zone
-	}
+
 	t, err := time.Parse(layout, str)
 	if err != nil {
 		return nil
