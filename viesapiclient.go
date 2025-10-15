@@ -266,23 +266,22 @@ func (c *VIESClient) getPathSuffix(typ int, number string) (string, bool) {
 	var b bool
 	var path string
 
-	if typ == numberNIP {
+	switch typ {
+	case numberNIP:
 		if !c.nip.isValid(number) {
 			c.set(CLI_NIP, "")
 			return "", false
 		}
 		path, b = c.nip.normalize(number)
 		path = "nip/" + path
-
-	} else if typ == numberEUVAT {
+	case numberEUVAT:
 		if !c.uevat.isValid(number) {
 			c.set(CLI_EUVAT, "")
 			return "", false
 		}
 		path, b = c.uevat.normalize(number)
 		path = "euvat/" + path
-
-	} else {
+	default:
 		c.set(CLI_NUMBER, "")
 		return "", false
 	}
