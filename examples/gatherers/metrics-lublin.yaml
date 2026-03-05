@@ -1,9 +1,0 @@
-smart:
-  - deviceStatus
-  - accumulatedEnergyYield
-  - dailyEnergyYield
-  - dailyPowerDuration
-  - activePower
-  - inputPower
-  - reactivePower
-  - co2Reduction
