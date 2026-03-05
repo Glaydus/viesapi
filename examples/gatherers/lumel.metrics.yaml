@@ -1,0 +1,20 @@
+meter:
+  - modelName
+  - deviceStatus
+  - modbusPort
+  - alarms
+  - activeImportedEnergy
+  - activeExportedEnergy
+  - reactiveInductiveEnergy
+  - reactiveCapacitiveEnergy
+  - apparentEnergy
+  - nominalVoltage1
+  - nominalVoltage2
+  - nominalCurrent1
+  - nominalCurrent2
+  - activePower3L
+  - reactivePower3L
+  - apparentPower3L
+  - activePower3LFactorRaw
+  - activePower3LFactor
+  - avgTg3LFactor

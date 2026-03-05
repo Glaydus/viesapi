@@ -1,0 +1,46 @@
+# Device-specific fields:
+# driver: driver name (required for inverters and meters)
+#
+# port: modbus port number (optional) - defaults to 502
+# slave: modbus slave id (optional) - defaults to 1
+# timeout: read/write timeout (optional) - defaults to 2s
+# register: modbus base register address (optional)
+---
+devices:
+    # ASUS thinkerboard
+    - marker: m1
+      kind: os
+      name: PC Host
+      ip: 127.0.0.1
+      sn: os
+
+    # router
+    - marker: m2
+      kind: router
+      name: Router
+      ip: 10.72.31.1
+      sn: router
+
+    # plcs
+    - marker: m3
+      kind: plc
+      name: FBs-20MCJ2-AC
+      sn: Fatek-PLC
+      ip: 10.72.31.111
+
+    # inverters
+    - marker: m5
+      kind: inverter
+      name: SUN2000-50KTL-M3
+      driver: sun2000
+      sn: ES2560106797
+      ip: 10.72.31.110
+
+defrosting:
+    - plc: m3
+      duration: 2m
+      markers: [m0,m1,m2,m3,m4,m5,m6]
+
+lighting:
+    - plc: m3
+      markers: [m7,m8,m9]

@@ -1,0 +1,19 @@
+inverter:
+  - modelName
+  - sn
+  - pn
+  - modelId
+  - deviceStatus
+  - dailyEnergyYield
+  - accumulatedEnergyYield
+  - activePower
+  - reactivePower
+  - efficiency
+  - dayPeekActivePower
+  - pv1Voltage
+  - pv1Current
+  - pgsReactivePowerCompensationPf
+  - pgsActivePowerDerating
+  - faultCode
+  - states
+  - alarms

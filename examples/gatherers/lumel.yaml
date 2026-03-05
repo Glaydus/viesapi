@@ -1,0 +1,456 @@
+# gain, addr, quantity: see Lumel meter documentation
+# type (one of the following):
+#
+# U16                       // Unsigned integer (16 bits)
+# U32                       // Unsigned integer (32 bits)
+# I16                       // Signed integer (16 bits)
+# I32                       // Signed integer (32 bits)
+# Str                       // String
+# Strs                      // array of strings
+# Bytes                     // Bytes
+# Bitfield16                // 16-bit data expressed by bit
+# Bitfield32                // 32-bit data expressed by bit
+---
+registers:
+  - name: modbusPort
+    type: U16
+    gain: 1
+    addr: 4147
+    quantity: 1
+  - name: modelNameReaded
+    type: U16
+    gain: 1
+    addr: 4401
+    quantity: 1
+  - name: bootloaderVersion
+    type: U16
+    gain: 100
+    addr: 4402
+    quantity: 1
+  - name: programVersion
+    type: U16
+    gain: 100
+    addr: 4403
+    quantity: 1
+  - name: nominalVoltage1
+    type: U16
+    gain: 10
+    addr: 4406
+    quantity: 1
+  - name: nominalVoltage2
+    type: U16
+    gain: 10
+    addr: 4407
+    quantity: 1
+  - name: nominalCurrent1
+    type: U16
+    gain: 100
+    addr: 4408
+    quantity: 1
+  - name: nominalCurrent2
+    type: U16
+    gain: 100
+    addr: 4409
+    quantity: 1
+  - name: sn76
+    type: Bytes
+    gain: 1
+    addr: 4411
+    quantity: 1
+  - name: sn54
+    type: Bytes
+    gain: 1
+    addr: 4412
+    quantity: 1
+  - name: sn32
+    type: Bytes
+    gain: 1
+    addr: 4413
+    quantity: 1
+  - name: sn10
+    type: Bytes
+    gain: 1
+    addr: 4414
+    quantity: 1
+  - name: sn
+    type: Str
+    merge:
+      - sn76
+      - sn54
+      - sn32
+      - sn10
+  - name: status1
+    type: Bytes
+    gain: 1
+    addr: 4415
+    quantity: 1
+    bits:
+      1: {on: "FRAM memory corruption", off: ""}
+      2: {on: "no input calibration", off: ""}
+      16: {on: "error in configuration registers", off: ""}
+      32: {on: "error in displayed pages registers", off: ""}
+      64: {on: "error in configuration registers of programmable read-only register group", off: ""}
+      128: {on: "error of energy values", off: ""}
+      256: {on: "error of phase sequence", off: ""}
+      512: {on: "error in MQTT registries", off: ""}
+      1024: {on: "error in the supervisory relay registers", off: ""}
+      8192: {on: "presence of Ethernet and internal memory", off: ""}
+      16384: {on: "used battery of RTC", off: ""}
+  - name: status2
+    type: Bytes
+    gain: 1
+    addr: 4416
+    quantity: 1
+    bits:
+      1: {on: "signaling of condition 3 occurrence for alarm 2", off: ""}
+      2: {on: "signaling of condition 2 occurrence for alarm 2", off: ""}
+      4: {on: "signaling of condition 1 occurrence for alarm 2", off: ""}
+      8: {on: "signaling of alarm 2 occurrence", off: ""}
+      16: {on: "alarm 2 condition 3 active", off: ""}
+      32: {on: "alarm 2 condition 2 active", off: ""}
+      64: {on: "alarm 2 condition 1 active", off: ""}
+      128: {on: "alarm 2 active", off: ""}
+      256: {on: "signaling of condition 3 occurrence for alarm 1", off: ""}
+      512: {on: "signaling of condition 2 occurrence for alarm 1", off: ""}
+      1024: {on: "signaling of condition 1 occurrence for alarm 1", off: ""}
+      2048: {on: "signaling of alarm 1 occurrence", off: ""}
+      4096: {on: "alarm 1 condition 3 active", off: ""}
+      8192: {on: "alarm 1 condition 2 active", off: ""}
+      16384: {on: "alarm 1 condition 1 active", off: ""}
+      32768: {on: "alarm 1 active", off: ""}
+  - name: status3
+    type: Bytes
+    gain: 1
+    addr: 4417
+    quantity: 1
+    bits:
+      1: {on: "Ethernet connected", off: ""}
+      16: {on: "archiving in 2-nd archiving group", off: "waiting until archiving conditions are met"}
+      32: {on: "archiving in 1-st archiving group", off: "waiting until archiving conditions are met"}
+      128: {on: "Archiving group 2 enabled", off: ""}
+      256: {on: "Archiving group 1 enabled", off: ""}
+      512: {on: "copying internal memory to file archive from 2nd archiving group", off: ""}
+      2048: {on: "copying internal memory to file archive from 1st archiving group", off: ""}
+      4096: {on: "File archive full, ( less than 14 days to complete archive filling at 1 sec. interval )", off: ""}
+      8192: {on: "File archive used in 70%", off: ""}
+      16384: {on: "File archive properly initiated", off: ""}
+      32768: {on: "Error of file archive system", off: ""}
+  - name: status4
+    type: Bytes
+    gain: 1
+    addr: 4418
+    quantity: 1
+    bits:
+      2: {on: "Demand- capacity 3L max.", off: ""}
+      4: {on: "Demand- capacity 3L min.", off: ""}
+      8: {on: "Demand- capacity 3L", off: ""}
+      16: {on: "capacitive 3L maximum", off: ""}
+      32: {on: "capacitive 3L minimum", off: ""}
+      64: {on: "capacitive 3L", off: ""}
+      128: {on: "capacitive L3 maximum", off: ""}
+      2048: {on: "capacitive L3 minimum", off: ""}
+      1024: {on: "capacitive L3", off: ""}
+      512: {on: "capacitive L2 maximum", off: ""}
+      256: {on: "capacitive L2 minimum", off: ""}
+      4096: {on: "capacitive L2", off: ""}
+      8192: {on: "capacitive L1 maximum", off: ""}
+      16384: {on: "capacitive L1 minimum", off: ""}
+      32768: {on: "capacitive L1", off: ""}
+  - name: status5
+    type: Bytes
+    gain: 1
+    addr: 4419
+    quantity: 1
+    bits:
+      128: {on: "alarm 1, condition 3 for L3 phase active", off: ""}
+      256: {on: "alarm 1, condition 3 for L2 phase active", off: ""}
+      512: {on: "alarm 1, condition 3 for L1 phase active", off: ""}
+      1024: {on: "alarm 1, condition 2 for L3 phase active", off: ""}
+      2048: {on: "alarm 1, condition 2 for L2 phase active", off: ""}
+      4096: {on: "alarm 1, condition 2 for L1 phase active", off: ""}
+      8192: {on: "alarm 1, condition 1 for L3 phase active", off: ""}
+      16384: {on: "alarm 1, condition 1 for L2 phase active", off: ""}
+      32768: {on: "alarm 1, condition 1 for L1 phase active", off: ""}
+  - name: status6
+    type: Bytes
+    gain: 1
+    addr: 4420
+    quantity: 1
+    bits:
+      128: {on: "alarm 2, condition 3 for L3 phase active", off: ""}
+      256: {on: "alarm 2, condition 3 for L2 phase active", off: ""}
+      512: {on: "alarm 2, condition 3 for L1 phase active", off: ""}
+      1024: {on: "alarm 2, condition 2 for L3 phase active", off: ""}
+      2048: {on: "alarm 2, condition 2 for L2 phase active", off: ""}
+      4096: {on: "alarm 2, condition 2 for L1 phase active", off: ""}
+      8192: {on: "alarm 2, condition 1 for L3 phase active", off: ""}
+      16384: {on: "alarm 2, condition 1 for L2 phase active", off: ""}
+      32768: {on: "alarm 2, condition 1 for L1 phase active", off: ""}
+  - name: mac54
+    type: Bytes
+    gain: 1
+    addr: 4421
+    quantity: 1
+  - name: mac32
+    type: Bytes
+    gain: 1
+    addr: 4422
+    quantity: 1
+  - name: mac10
+    type: Bytes
+    gain: 1
+    addr: 4423
+    quantity: 1
+  - name: mac
+    type: Str
+    merge:
+      - mac54
+      - mac32
+      - mac10
+  - name: status7
+    type: Bytes
+    gain: 1
+    addr: 4424
+    quantity: 1
+    bits:
+      16384: {on: "functions of MQTT protocol enabled", off: ""}
+      32768: {on: "functions of supervisory relay enabled", off: ""}
+  - name: status
+    type: Strs
+    merge:
+      - status1
+      - status2
+      - status3
+      - status4
+      - status5
+      - status6
+      - status7
+  - name: alarms
+    type: Strs
+    merge:
+      - status2
+  - name: activeImportedEnergy32
+    type: Bytes
+    gain: 1
+    addr: 4426
+    quantity: 1
+  - name: activeImportedEnergy10
+    type: Bytes
+    gain: 1
+    addr: 4427
+    quantity: 1
+  - name: activeImportedEnergy
+    type: U32
+    gain: 100
+    merge:
+      - activeImportedEnergy32
+      - activeImportedEnergy10
+  - name: activeExportedEnergy32
+    type: Bytes
+    gain: 1
+    addr: 4428
+    quantity: 1
+  - name: activeExportedEnergy10
+    type: Bytes
+    gain: 1
+    addr: 4429
+    quantity: 1
+  - name: activeExportedEnergy
+    type: U32
+    gain: 100
+    merge:
+      - activeExportedEnergy32
+      - activeExportedEnergy10
+  - name: reactiveInductiveEnergy32
+    type: Bytes
+    gain: 1
+    addr: 4430
+    quantity: 1
+  - name: reactiveInductiveEnergy10
+    type: Bytes
+    gain: 1
+    addr: 4431
+    quantity: 1
+  - name: reactiveInductiveEnergy
+    type: U32
+    gain: 100
+    merge:
+      - reactiveInductiveEnergy32
+      - reactiveInductiveEnergy10
+  - name: reactiveCapacitiveEnergy32
+    type: Bytes
+    gain: 1
+    addr: 4432
+    quantity: 1
+  - name: reactiveCapacitiveEnergy10
+    type: Bytes
+    gain: 1
+    addr: 4433
+    quantity: 1
+  - name: reactiveCapacitiveEnergy
+    type: U32
+    gain: 100
+    merge:
+      - reactiveCapacitiveEnergy32
+      - reactiveCapacitiveEnergy10
+  - name: apparentEnergy32
+    type: Bytes
+    gain: 1
+    addr: 4434
+    quantity: 1
+  - name: apparentEnergy10
+    type: Bytes
+    gain: 1
+    addr: 4435
+    quantity: 1
+  - name: apparentEnergy
+    type: U32
+    gain: 100
+    merge:
+      - apparentEnergy32
+      - apparentEnergy10
+  - name: phaseVoltageL1
+    type: U16
+    gain: 1
+    addr: 7500
+    quantity: 1
+  - name: phaseCurrentL1
+    type: U16
+    gain: 1
+    addr: 7501
+    quantity: 1
+  - name: activePowerL1
+    type: U16
+    gain: 1
+    addr: 7502
+    quantity: 1
+  - name: reactivePowerL1
+    type: U16
+    gain: 1
+    addr: 7503
+    quantity: 1
+  - name: apparentPowerL1
+    type: U16
+    gain: 1
+    addr: 7504
+    quantity: 1
+  - name: activePowerFactorL1
+    type: U16
+    gain: 1
+    addr: 7505
+    quantity: 1
+  - name: phaseVoltageL2
+    type: U16
+    gain: 1
+    addr: 7509
+    quantity: 1
+  - name: phaseCurrentL2
+    type: U16
+    gain: 1
+    addr: 7510
+    quantity: 1
+  - name: activePowerL2
+    type: U16
+    gain: 1
+    addr: 7511
+    quantity: 1
+  - name: reactivePowerL2
+    type: U16
+    gain: 1
+    addr: 7512
+    quantity: 1
+  - name: apparentPowerL2
+    type: U16
+    gain: 1
+    addr: 7513
+    quantity: 1
+  - name: activePowerFactorL2
+    type: U16
+    gain: 1
+    addr: 7514
+    quantity: 1
+  - name: phaseVoltageL3
+    type: U16
+    gain: 1
+    addr: 7518
+    quantity: 1
+  - name: phaseCurrentL3
+    type: U16
+    gain: 1
+    addr: 7519
+    quantity: 1
+  - name: activePowerL3
+    type: U16
+    gain: 1
+    addr: 7520
+    quantity: 1
+  - name: reactivePowerL3
+    type: U16
+    gain: 1
+    addr: 7521
+    quantity: 1
+  - name: apparentPowerL3
+    type: U16
+    gain: 1
+    addr: 7522
+    quantity: 1
+  - name: activePowerFactorL3
+    type: U16
+    gain: 1
+    addr: 7523
+    quantity: 1
+  - name: avgVoltage3L
+    type: U16
+    gain: 1
+    addr: 7527
+    quantity: 1
+  - name: avgCurrent3L
+    type: U16
+    gain: 1
+    addr: 7528
+    quantity: 1
+  - name: activePower3L  # sum of 3-phase active power (P1+P2+P3)
+    type: U16
+    gain: 1
+    addr: 7529
+    quantity: 1
+  - name: reactivePower3L  # sum of 3-phase reactive power (Q1+Q2+Q3)
+    type: U16
+    gain: 1
+    addr: 7530
+    quantity: 1
+  - name: apparentPower3L  # sum of 3-phase apparent power (S1+S2+S3)
+    type: U16
+    gain: 1
+    addr: 7531
+    quantity: 1
+  - name: activePower3LFactorRaw  # 3-phase active power factor (PF=P/S)
+    type: U16
+    gain: 1
+    addr: 7532
+    quantity: 1
+  - name: avgTg3LFactor  # tg fi factor 3-phase average (tg=Q/P)
+    type: U16
+    gain: 1
+    addr: 7533
+    quantity: 1
+  - name: frequency
+    type: U16
+    gain: 1
+    addr: 7536
+    quantity: 1
+  - name: interphaseVoltageL12
+    type: U16
+    gain: 1
+    addr: 7537
+    quantity: 1
+  - name: interphaseVoltageL23
+    type: U16
+    gain: 1
+    addr: 7538
+    quantity: 1
+  - name: interphaseVoltageL31
+    type: U16
+    gain: 1
+    addr: 7539
+    quantity: 1

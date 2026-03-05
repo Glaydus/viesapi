@@ -1,0 +1,11 @@
+inverter:
+  - modelName
+  - sn
+  - pn
+  - modelId
+  - deviceStatus
+  - accumulatedEnergyYield
+  - activePower
+  - reactivePower
+  - powerFactor
+  - temperature

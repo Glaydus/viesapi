@@ -1,0 +1,124 @@
+# addr, quantity: see inverter documentation (note: in solarEdge there is 'Size' instead of quantity)
+# scaleAddr: address of scale factor register (for dynamic scaling: see documentation for details)
+# type (one of the following):
+#
+# U16                       // Unsigned integer (16 bits)
+# U32                       // Unsigned integer (32 bits)
+# I16                       // Signed integer (16 bits)
+# I32                       // Signed integer (32 bits)
+# Str                       // String
+# Strs                      // array of strings
+# Bytes                     // Bytes
+# Bitfield16                // 16-bit data expressed by bit
+# Bitfield32                // 32-bit data expressed by bit
+---
+registers:
+  - name: modelName
+    type: Str
+    addr: 40020
+    quantity: 16
+  - name: pn
+    type: Str
+    addr: 40044
+    quantity: 8
+  - name: sn
+    type: Str
+    addr: 40052
+    quantity: 16
+  - name: modelId
+    type: U16
+    addr: 40069
+    quantity: 1
+  - name: totalCurrent
+    type: U16
+    addr: 40071
+    quantity: 1
+    scaleAddr: 40075
+  - name: phaseACurrent
+    type: U16
+    addr: 40072
+    quantity: 1
+    scaleAddr: 40075
+  - name: phaseBCurrent
+    type: U16
+    addr: 40073
+    quantity: 1
+    scaleAddr: 40075
+  - name: phaseCCurrent
+    type: U16
+    addr: 40074
+    quantity: 1
+    scaleAddr: 40075
+  - name: LineVoltageAAndB
+    type: U16
+    addr: 40076
+    quantity: 1
+    scaleAddr: 40082
+  - name: LineVoltageBAndC
+    type: U16
+    addr: 40077
+    quantity: 1
+    scaleAddr: 40082
+  - name: LineVoltageCAndA
+    type: U16
+    addr: 40078
+    quantity: 1
+    scaleAddr: 40082
+  - name: phaseAVoltage
+    type: U16
+    addr: 40079
+    quantity: 1
+    scaleAddr: 40082
+  - name: phaseBVoltage
+    type: U16
+    addr: 40080
+    quantity: 1
+    scaleAddr: 40082
+  - name: phaseCVoltage
+    type: U16
+    addr: 40081
+    quantity: 1
+    scaleAddr: 40082
+  - name: activePower
+    type: I16
+    addr: 40083
+    quantity: 1
+    scaleAddr: 40084
+  - name: gridFrequency
+    type: U16
+    addr: 40085
+    quantity: 1
+    scaleAddr: 40086
+  - name: reactivePower
+    type: I16
+    addr: 40089
+    quantity: 1
+    scaleAddr: 40090
+  - name: powerFactor
+    type: I16
+    addr: 40091
+    quantity: 1
+    scaleAddr: 40092
+  - name: accumulatedEnergyYield
+    type: U32
+    addr: 40093
+    quantity: 2
+    scaleAddr: 40095
+  - name: temperature
+    type: I16
+    addr: 40103
+    quantity: 1
+    scaleAddr: 40106
+  - name: deviceStatus
+    type: U16
+    addr: 40107
+    quantity: 1
+    codes:
+      1: "Offline"
+      2: "Sleeping (auto-shutdown) - Night mode"
+      3: "Grid Monitoring/wake-up"
+      4: "Inverter is ON and producing power"
+      5: "Production (curtailed)"
+      6: "Shutting down"
+      7: "Fault"
+      8: "Maintenance/setup"

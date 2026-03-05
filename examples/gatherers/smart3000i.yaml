@@ -1,0 +1,73 @@
+# gain, addr, quantity: see SmartLogger inverter documentation
+# type (one of the following):
+#
+# U16                       // Unsigned integer (16 bits)
+# U32                       // Unsigned integer (32 bits)
+# I16                       // Signed integer (16 bits)
+# I32                       // Signed integer (32 bits)
+# Str                       // String
+# Strs                      // array of strings
+# Bytes                     // Bytes
+# Bitfield16                // 16-bit data expressed by bit
+# Bitfield32                // 32-bit data expressed by bit
+---
+registers:
+  - name: activePower
+    type: I32
+    gain: 1000
+    addr: 0
+    quantity: 2
+  - name: reactivePower
+    type: I32
+    gain: 1000
+    addr: 2
+    quantity: 2
+  - name: inputDc
+    type: I16
+    gain: 100
+    addr: 4
+    quantity: 1
+  - name: inputPower
+    type: U32
+    gain: 1000
+    addr: 5
+    quantity: 2
+  - name: insulationResistance
+    type: U16
+    gain: 1000
+    addr: 7
+    quantity: 1
+  - name: powerFactor
+    type: I16
+    gain: 1000
+    addr: 8
+    quantity: 1
+  - name: deviceStatus
+    type: U16
+    gain: 1
+    addr: 9
+    quantity: 1
+    codes:
+      0xB000: "Communication interrupt"
+      0xB001: "Online"
+      0xC000: "Uploading"
+  - name: temperature
+    type: I16
+    gain: 10
+    addr: 11
+    quantity: 1
+  - name: majorFaultCode
+    type: U32
+    gain: 1
+    addr: 12
+    quantity: 2
+  - name: minorFaultCode
+    type: U32
+    gain: 1
+    addr: 14
+    quantity: 2
+  - name: warningCode
+    type: U32
+    gain: 1
+    addr: 16
+    quantity: 2

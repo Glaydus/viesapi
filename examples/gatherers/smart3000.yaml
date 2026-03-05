@@ -1,0 +1,122 @@
+# gain, addr, quantity: see SmartLogger documentation
+# type (one of the following):
+#
+# U16                       // Unsigned integer (16 bits)
+# U32                       // Unsigned integer (32 bits)
+# I16                       // Signed integer (16 bits)
+# I32                       // Signed integer (32 bits)
+# Str                       // String
+# Strs                      // array of strings
+# Bytes                     // Bytes
+# Bitfield16                // 16-bit data expressed by bit
+# Bitfield32                // 32-bit data expressed by bit
+---
+registers:
+  - name: dateTime
+    type: U32
+    gain: 1
+    addr: 40000
+    quantity: 2
+  - name: localTime
+    type: U32
+    gain: 1
+    addr: 40009
+    quantity: 2
+  - name: inputPower
+    type: U32
+    gain: 1000
+    addr: 40521
+    quantity: 2
+  - name: co2Reduction
+    type: U32
+    gain: 10
+    addr: 40523
+    quantity: 2
+  - name: activePower
+    type: I32
+    gain: 1000
+    addr: 40525
+    quantity: 2
+  - name: powerFactor
+    type: I16
+    gain: 1000
+    addr: 40532
+    quantity: 1
+  - name: reactivePower
+    type: I32
+    gain: 1000
+    addr: 40544
+    quantity: 2
+  - name: accumulatedEnergyYield
+    type: U32
+    gain: 10
+    addr: 40560
+    quantity: 2
+  - name: dailyEnergyYield
+    type: U32
+    gain: 10
+    addr: 40562
+    quantity: 2
+  - name: dailyPowerDuration
+    type: U32
+    gain: 10
+    addr: 40564
+    quantity: 2
+  - name: phaseACurrent
+    type: I16
+    gain: 1
+    addr: 40572
+    quantity: 1
+  - name: phaseBCurrent
+    type: I16
+    gain: 1
+    addr: 40573
+    quantity: 1
+  - name: phaseCCurrent
+    type: I16
+    gain: 1
+    addr: 40574
+    quantity: 1
+  - name: esn
+    type: Str
+    gain: 1
+    addr: 40713
+    quantity: 10
+  - name: deviceAccessStatus
+    type: U16
+    gain: 1
+    addr: 40736
+    quantity: 1
+  - name: alarm1
+    type: Bitfield16
+    gain: 1
+    addr: 50000
+    quantity: 1
+    bits:
+      8: {on: "Abnormal Active Schedule", off: "", code: 1100}
+      2048: {on: "Abnormal Reactive Schedule", off: "", code: 1101}
+  - name: alarm2
+    type: Bitfield16
+    gain: 1
+    addr: 50001
+    quantity: 1
+    bits:
+      1: {on: "MCB Disconnect", off: "", code: 1103}
+      2: {on: "Abnormal Cubicle", off: "", code: 1104}
+      4: {on: "Device Address Conflict", off: "", code: 1105}
+      8: {on: "AC SPD fault", off: "", code: 1106}
+      8192: {on: "24V power failure", off: "", code: 1115}
+      16384: {on: "License Expired", off: "", code: 1119}
+  - name: alarms
+    type: Strs
+    merge:
+      - alarm1
+      - alarm2
+  - name: deviceStatus
+    type: U16
+    gain: 1
+    addr: 65534
+    quantity: 1
+    codes:
+      0xB000: "Disconnection"
+      0xB001: "Online"
